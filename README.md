@@ -334,3 +334,18 @@ python src/evaluate.py
 - **Não altere os datasets de avaliação** - apenas os prompts em `prompts/bug_to_user_story_v2.yml`
 - **Itere, itere, itere** - é normal precisar de 3-5 iterações para atingir 0.8 em todas as métricas
 - **Documente seu processo** - a jornada de otimização é tão importante quanto o resultado final
+
+---
+
+## Work in Progress
+```sh
+docker compose up -d --build
+
+docker compose exec app bash
+
+# dentro do container:
+python src/pull_prompts.py
+```
+
+- [x] Fase 1: Pull do prompt inicial do LangSmith
+  - [ ] verificar permissões do arquivo criado no /prompts via execução do container
