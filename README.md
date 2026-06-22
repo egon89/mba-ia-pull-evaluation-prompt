@@ -382,29 +382,50 @@ Ao apresentar exemplos reais de bugs e suas respectivas User Stories, o modelo a
 - Nível adequado de detalhamento
 - Como criar critérios de aceitação
 - Como identificar edge cases
+- Como transformar problemas técnicos em requisitos de negócio
 
 ### Aplicação Prática
 
 Foram adicionados três exemplos completos cobrindo cenários distintos:
 
-1. Falha em botão de interface
-2. Expiração incorreta de sessão
-3. Problemas na exportação de relatórios
+1. Isolamento de dados entre tenants (Multi-Tenant)
+2. Renovação de autenticação utilizando Refresh Token
+3. Exportação de relatórios PDF
 
-Exemplo:
+### Exemplo 1 - Multi-Tenant
 
 Entrada:
 
-"O botão Salvar Perfil não funciona"
+```text
+Usuários da empresa Alpha estão visualizando registros pertencentes à empresa Beta ao acessar a tela de pedidos.
+```
 
 Saída:
 
 ```markdown
 ## User Story
 
-Como usuário da plataforma,
-Quero salvar alterações realizadas no meu perfil,
-Para manter minhas informações atualizadas.
+Como usuário de uma empresa cadastrada na plataforma,
+Quero visualizar apenas os dados pertencentes ao meu tenant,
+Para garantir a confidencialidade e integridade das informações da minha organização.
+```
+
+### Exemplo 2 - Refresh Token
+
+Entrada:
+
+```text
+A aplicação não utiliza refresh token para renovação da autenticação. Durante o uso contínuo, a sessão expira e o usuário é desconectado.
+```
+
+Saída:
+
+```markdown
+## User Story
+
+Como usuário autenticado,
+Quero que minha sessão seja renovada automaticamente enquanto estiver utilizando a aplicação,
+Para continuar meu trabalho sem interrupções inesperadas.
 ```
 
 ### Métricas Impactadas
@@ -425,9 +446,9 @@ O prompt original utilizava apenas:
 Você é um assistente.
 ```
 
-Essa definição é genérica e produz respostas inconsistentes.
+Essa definição é muito genérica e pode gerar respostas inconsistentes.
 
-Foi criada uma persona especializada em Product Management e Scrum para aproximar a saída das práticas reais utilizadas por equipes ágeis.
+Foi criada uma persona especializada em Product Management, Scrum e Refinamento de Backlog para aproximar a saída das práticas utilizadas em equipes ágeis reais.
 
 ### Aplicação Prática
 
@@ -446,9 +467,10 @@ Você é um Product Manager Sênior especializado em:
 
 ### Benefícios Esperados
 
-- Melhor contextualização
-- Melhor qualidade das User Stories
+- Melhor contextualização do problema
+- User Stories mais alinhadas com práticas ágeis
 - Critérios de aceitação mais relevantes
+- Menor probabilidade de respostas genéricas
 
 ### Métricas Impactadas
 
@@ -461,9 +483,9 @@ Você é um Product Manager Sênior especializado em:
 
 ### Justificativa
 
-A avaliação exige consistência e clareza.
+A avaliação exige respostas consistentes e facilmente compreensíveis.
 
-Foi utilizado Skeleton of Thought para obrigar o modelo a seguir uma estrutura fixa e previsível.
+Foi utilizada a técnica Skeleton of Thought para obrigar o modelo a seguir uma estrutura fixa, reduzindo variabilidade entre execuções.
 
 ### Aplicação Prática
 
@@ -489,9 +511,10 @@ Para ...
 
 ### Benefícios Esperados
 
-- Respostas padronizadas
-- Melhor legibilidade
-- Menor variabilidade entre execuções
+- Melhor organização da resposta
+- Facilidade de leitura
+- Saídas mais previsíveis
+- Menor risco de omissão de informações importantes
 
 ### Métricas Impactadas
 
@@ -505,82 +528,157 @@ Para ...
 
 ## Helpfulness
 
-Mede o quanto a resposta é útil para resolver o problema apresentado.
+### O que mede
 
-Exemplo:
+Avalia o quanto a resposta ajuda efetivamente a resolver o problema informado.
 
-❌ Baixa
+### Exemplo
+
+Bug:
 
 ```text
-Como usuário,
-quero usar o sistema.
+Usuário visualiza dados de outro tenant.
 ```
 
-✅ Alta
+❌ Pouco útil
 
 ```text
-Como usuário,
-quero salvar alterações no meu perfil,
-para manter meus dados atualizados.
+Corrigir acesso aos dados.
+```
+
+✅ Muito útil
+
+```text
+Como usuário de uma empresa cadastrada na plataforma,
+Quero visualizar apenas os dados pertencentes ao meu tenant,
+Para garantir a confidencialidade das informações da minha organização.
 ```
 
 ---
 
 ## Correctness
 
-Mede o quanto a User Story representa corretamente o bug informado.
+### O que mede
 
-Exemplo:
+Avalia se a User Story representa corretamente o problema descrito no bug.
+
+### Exemplo
 
 Bug:
 
 ```text
-PDF exportado em branco
+A sessão expira durante uso contínuo da aplicação.
 ```
 
 ❌ Incorreto
 
 ```text
 Como usuário,
-quero alterar minha senha.
+Quero alterar minha senha.
 ```
 
 ✅ Correto
 
 ```text
-Como usuário,
-quero exportar relatórios corretamente.
+Como usuário autenticado,
+Quero que minha sessão seja renovada automaticamente,
+Para continuar utilizando a aplicação sem interrupções.
 ```
 
 ---
 
 ## F1-Score
 
-Mede a similaridade entre a resposta gerada e a resposta esperada pelo dataset.
+### O que mede
 
-Quanto mais próxima da referência, maior a pontuação.
+Mede a similaridade entre a resposta gerada e a resposta esperada no dataset de avaliação.
+
+É calculada a partir de Precision e Recall.
+
+### Exemplo
+
+Resposta Esperada:
+
+```text
+Como usuário autenticado,
+Quero renovar minha sessão automaticamente.
+```
+
+Resposta Gerada:
+
+```text
+Como usuário autenticado,
+Quero que minha sessão seja renovada automaticamente.
+```
+
+Alta similaridade → F1 elevado.
 
 ---
 
 ## Clarity
 
-Mede clareza, organização e facilidade de entendimento.
+### O que mede
 
-Respostas estruturadas tendem a obter notas maiores.
+Avalia o quão clara, organizada e fácil de entender é a resposta.
+
+### Exemplo
+
+❌ Baixa Clareza
+
+```text
+Usuário tem problema de autenticação e deve continuar trabalhando e o token expira então é necessário corrigir isso.
+```
+
+✅ Alta Clareza
+
+```markdown
+## User Story
+
+Como usuário autenticado,
+Quero renovar minha sessão automaticamente,
+Para continuar utilizando a aplicação sem interrupções.
+
+## Critérios de Aceitação
+
+- Renovar token antes da expiração.
+- Não realizar logout durante uso ativo.
+```
 
 ---
 
 ## Precision
 
-Mede o quanto a resposta permanece focada no problema informado.
+### O que mede
 
-Informações irrelevantes reduzem a pontuação.
+Avalia o quanto a resposta permanece focada exclusivamente no problema informado.
+
+### Exemplo
+
+Bug:
+
+```text
+Exportação de PDF gera páginas em branco.
+```
+
+❌ Baixa Precisão
+
+```text
+Corrigir PDF e adicionar dashboard, notificações e exportação para Excel.
+```
+
+✅ Alta Precisão
+
+```text
+Como usuário que exporta relatórios,
+Quero gerar arquivos PDF completos e legíveis,
+Para compartilhar informações corretamente.
+```
 
 ---
 
 # Relação entre Técnicas e Métricas
 
-| Técnica | Helpfulness | Correctness | Clarity | Precision | F1 |
+| Técnica | Helpfulness | Correctness | Clarity | Precision | F1-Score |
 |----------|----------|----------|----------|----------|----------|
 | Few-shot Learning | | ✓ | | ✓ | ✓ |
 | Role Prompting | ✓ | ✓ | | | |
@@ -590,12 +688,39 @@ Informações irrelevantes reduzem a pontuação.
 
 # Resultado Esperado
 
-A combinação das três técnicas foi escolhida para maximizar simultaneamente:
+A combinação das técnicas foi escolhida para atacar diretamente as métricas avaliadas pelo LangSmith.
+
+### Few-shot Learning
+
+Melhora:
+
+- Correctness
+- Precision
+- F1-Score
+
+### Role Prompting
+
+Melhora:
 
 - Helpfulness
 - Correctness
-- F1-Score
+
+### Skeleton of Thought
+
+Melhora:
+
 - Clarity
 - Precision
+- F1-Score
 
-com objetivo de atingir nota mínima de 0.8 em todas as métricas avaliadas pelo LangSmith.
+Com isso, espera-se atingir:
+
+| Métrica | Meta |
+|----------|----------|
+| Helpfulness | ≥ 0.8 |
+| Correctness | ≥ 0.8 |
+| F1-Score | ≥ 0.8 |
+| Clarity | ≥ 0.8 |
+| Precision | ≥ 0.8 |
+
+e consequentemente obter aprovação no processo de avaliação do desafio.
