@@ -341,7 +341,7 @@ python src/evaluate.py
 ```sh
 docker compose up -d --build
 
-docker compose exec app bash
+docker compose exec python_app bash
 
 # dentro do container:
 python src/pull_prompts.py
@@ -349,3 +349,253 @@ python src/pull_prompts.py
 
 - [x] Fase 1: Pull do prompt inicial do LangSmith
   - [ ] verificar permissões do arquivo criado no /prompts via execução do container
+- [ ] Fase 2: Refatoração do prompt com técnicas avançadas de Prompt Engineering
+  - [ ] Few-shot Learning: alterar exemplos
+
+---
+
+# Técnicas Aplicadas (Fase 2)
+
+## Objetivo
+
+O objetivo desta fase foi otimizar o prompt responsável por converter relatos de bugs em User Stories, aumentando sua qualidade nas métricas de avaliação:
+
+- Helpfulness
+- Correctness
+- F1-Score
+- Clarity
+- Precision
+
+---
+
+# Técnicas Utilizadas
+
+## 1. Few-shot Learning
+
+### Justificativa
+
+A técnica de Few-shot Learning foi escolhida porque o prompt original não fornecia exemplos de entrada e saída.
+
+Ao apresentar exemplos reais de bugs e suas respectivas User Stories, o modelo aprende:
+
+- Estrutura esperada da resposta
+- Nível adequado de detalhamento
+- Como criar critérios de aceitação
+- Como identificar edge cases
+
+### Aplicação Prática
+
+Foram adicionados três exemplos completos cobrindo cenários distintos:
+
+1. Falha em botão de interface
+2. Expiração incorreta de sessão
+3. Problemas na exportação de relatórios
+
+Exemplo:
+
+Entrada:
+
+"O botão Salvar Perfil não funciona"
+
+Saída:
+
+```markdown
+## User Story
+
+Como usuário da plataforma,
+Quero salvar alterações realizadas no meu perfil,
+Para manter minhas informações atualizadas.
+```
+
+### Métricas Impactadas
+
+- Correctness
+- Precision
+- F1-Score
+
+---
+
+## 2. Role Prompting
+
+### Justificativa
+
+O prompt original utilizava apenas:
+
+```text
+Você é um assistente.
+```
+
+Essa definição é genérica e produz respostas inconsistentes.
+
+Foi criada uma persona especializada em Product Management e Scrum para aproximar a saída das práticas reais utilizadas por equipes ágeis.
+
+### Aplicação Prática
+
+Foi definida a seguinte persona:
+
+```text
+Você é um Product Manager Sênior especializado em:
+
+- Scrum
+- Agile
+- Product Discovery
+- Product Delivery
+- Refinamento de Backlog
+- Escrita de User Stories
+```
+
+### Benefícios Esperados
+
+- Melhor contextualização
+- Melhor qualidade das User Stories
+- Critérios de aceitação mais relevantes
+
+### Métricas Impactadas
+
+- Helpfulness
+- Correctness
+
+---
+
+## 3. Skeleton of Thought
+
+### Justificativa
+
+A avaliação exige consistência e clareza.
+
+Foi utilizado Skeleton of Thought para obrigar o modelo a seguir uma estrutura fixa e previsível.
+
+### Aplicação Prática
+
+Foi definido o seguinte formato obrigatório:
+
+```markdown
+## Resumo do Problema
+
+## User Story
+
+Como ...
+Quero ...
+Para ...
+
+## Critérios de Aceitação
+
+- ...
+
+## Edge Cases
+
+- ...
+```
+
+### Benefícios Esperados
+
+- Respostas padronizadas
+- Melhor legibilidade
+- Menor variabilidade entre execuções
+
+### Métricas Impactadas
+
+- Clarity
+- Precision
+- F1-Score
+
+---
+
+# Resumo das Métricas
+
+## Helpfulness
+
+Mede o quanto a resposta é útil para resolver o problema apresentado.
+
+Exemplo:
+
+❌ Baixa
+
+```text
+Como usuário,
+quero usar o sistema.
+```
+
+✅ Alta
+
+```text
+Como usuário,
+quero salvar alterações no meu perfil,
+para manter meus dados atualizados.
+```
+
+---
+
+## Correctness
+
+Mede o quanto a User Story representa corretamente o bug informado.
+
+Exemplo:
+
+Bug:
+
+```text
+PDF exportado em branco
+```
+
+❌ Incorreto
+
+```text
+Como usuário,
+quero alterar minha senha.
+```
+
+✅ Correto
+
+```text
+Como usuário,
+quero exportar relatórios corretamente.
+```
+
+---
+
+## F1-Score
+
+Mede a similaridade entre a resposta gerada e a resposta esperada pelo dataset.
+
+Quanto mais próxima da referência, maior a pontuação.
+
+---
+
+## Clarity
+
+Mede clareza, organização e facilidade de entendimento.
+
+Respostas estruturadas tendem a obter notas maiores.
+
+---
+
+## Precision
+
+Mede o quanto a resposta permanece focada no problema informado.
+
+Informações irrelevantes reduzem a pontuação.
+
+---
+
+# Relação entre Técnicas e Métricas
+
+| Técnica | Helpfulness | Correctness | Clarity | Precision | F1 |
+|----------|----------|----------|----------|----------|----------|
+| Few-shot Learning | | ✓ | | ✓ | ✓ |
+| Role Prompting | ✓ | ✓ | | | |
+| Skeleton of Thought | | | ✓ | ✓ | ✓ |
+
+---
+
+# Resultado Esperado
+
+A combinação das três técnicas foi escolhida para maximizar simultaneamente:
+
+- Helpfulness
+- Correctness
+- F1-Score
+- Clarity
+- Precision
+
+com objetivo de atingir nota mínima de 0.8 em todas as métricas avaliadas pelo LangSmith.
