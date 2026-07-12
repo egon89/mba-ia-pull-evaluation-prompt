@@ -350,6 +350,8 @@ python src/pull_prompts.py
 - [x] Fase 1: Pull do prompt inicial do LangSmith
   - [ ] verificar permissões do arquivo criado no /prompts via execução do container
 - [x] Fase 2: Refatoração do prompt com técnicas avançadas de Prompt Engineering
+- [ ] Fase 3: Push do prompt otimizado para o LangSmith
+  - executar script `src/push_prompts.py` e verificar no dashboard do LangSmith se o prompt foi publicado
 
 ---
 
