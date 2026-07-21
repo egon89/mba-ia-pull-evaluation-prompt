@@ -353,6 +353,9 @@ python src/pull_prompts.py
 - [x] Fase 3: Push do prompt otimizado para o LangSmith
   - executar script `src/push_prompts.py` e verificar no dashboard do LangSmith se o prompt foi publicado
   - [prompt-publicado](https://smith.langchain.com/prompts/bug_to_user_story_v2/3be67315?organizationId=b24bdd88-0126-4580-8f00-4e081631a24f)
+- [x] Fase 4: Avaliação do prompt otimizado
+  - executar script `src/evaluate.py` e verificar se todas as métricas estão >= 0.8
+- [ ] Verificar testes e documentação
 
 ---
 
@@ -564,3 +567,85 @@ A combinação das técnicas foi escolhida para melhorar simultaneamente as cinc
 | **Skeleton of Thought** | Padroniza a estrutura da resposta e reduz variações entre execuções. |
 
 Espera-se, com essa combinação, atingir pontuação **igual ou superior a 0,8** em todas as métricas de avaliação (Helpfulness, Correctness, F1-Score, Clarity e Precision).
+
+---
+
+## Avaliação
+```
+==================================================
+AVALIAÇÃO DE PROMPTS OTIMIZADOS
+==================================================
+
+Provider: openai
+Modelo Principal: gpt-4.1-mini
+Modelo de Avaliação: gpt-4.1-mini
+
+Criando dataset de avaliação: mba-fc-eval...
+   ✓ Carregados 15 exemplos do arquivo datasets/bug_to_user_story.jsonl
+   ✓ Dataset 'mba-fc-eval' já existe, usando existente
+
+======================================================================
+PROMPTS PARA AVALIAR
+======================================================================
+
+Este script irá puxar prompts do LangSmith Hub.
+Certifique-se de ter feito push dos prompts antes de avaliar:
+  python src/push_prompts.py
+
+
+🔍 Avaliando: egon89/bug_to_user_story_v2
+   Puxando prompt do LangSmith Hub: egon89/bug_to_user_story_v2
+   ✓ Prompt carregado com sucesso
+   Dataset: 15 exemplos
+   Avaliando exemplos...
+      [1/15] F1:0.87 Clarity:0.90 Precision:0.95
+      [2/15] F1:0.87 Clarity:0.85 Precision:0.95
+      [3/15] F1:0.87 Clarity:0.95 Precision:1.00
+      [4/15] F1:0.69 Clarity:0.80 Precision:0.90
+      [5/15] F1:0.80 Clarity:0.85 Precision:0.90
+      [6/15] F1:1.00 Clarity:0.85 Precision:1.00
+      [7/15] F1:0.90 Clarity:0.85 Precision:0.90
+      [8/15] F1:0.87 Clarity:0.90 Precision:1.00
+      [9/15] F1:0.85 Clarity:0.80 Precision:0.80
+      [10/15] F1:0.90 Clarity:0.85 Precision:0.90
+      [11/15] F1:0.85 Clarity:0.80 Precision:0.90
+      [12/15] F1:0.90 Clarity:0.85 Precision:1.00
+      [13/15] F1:0.95 Clarity:0.90 Precision:1.00
+      [14/15] F1:0.85 Clarity:0.85 Precision:1.00
+      [15/15] F1:0.85 Clarity:0.85 Precision:0.90
+
+==================================================
+Prompt: egon89/bug_to_user_story_v2
+==================================================
+
+Métricas Derivadas:
+  - Helpfulness: 0.90 ✓
+  - Correctness: 0.90 ✓
+
+Métricas Base:
+  - F1-Score: 0.87 ✓
+  - Clarity: 0.86 ✓
+  - Precision: 0.94 ✓
+
+--------------------------------------------------
+📊 MÉDIA GERAL: 0.8933
+--------------------------------------------------
+
+✅ STATUS: APROVADO - Todas as métricas >= 0.8
+
+==================================================
+RESUMO FINAL
+==================================================
+
+Prompts avaliados: 1
+Aprovados: 1
+Reprovados: 0
+
+✅ Todos os prompts atingiram todas as métricas >= 0.8!
+
+✓ Confira os resultados em:
+  https://smith.langchain.com/projects/mba-fc
+```
+
+![evaluate-1](/docs/evaluate-1.png)
+![evaluate-2](/docs/evaluate-2.png)
