@@ -1,0 +1,72 @@
+{
+  "inputs": {
+    "bug_report": "Botão de adicionar ao carrinho não funciona no produto ID 1234."
+  },
+  "outputs": {
+    "output": {
+      "additional_kwargs": {
+        "refusal": null
+      },
+      "content": "## Resumo do Problema\n\nO botão de adicionar ao carrinho está inoperante para o produto com ID 1234, impedindo que usuários incluam esse item no carrinho de compras.\n\n## User Story\n\nComo usuário da loja virtual,  \nQuero conseguir adicionar o produto com ID 1234 ao meu carrinho,  \nPara poder prosseguir com a compra desse item.\n\n## Critérios de Aceitação\n\n- O botão de adicionar ao carrinho deve funcionar corretamente para o produto ID 1234.  \n- Ao clicar no botão, o produto deve ser incluído no carrinho.  \n- O sistema deve exibir confirmação visual ou mensagem indicando que o produto foi adicionado.  \n- O comportamento deve ser consistente com o funcionamento do botão para outros produtos.  \n\n## Edge Cases\n\n- Produto ID 1234 com estoque zerado ou indisponível.  \n- Usuário não autenticado tentando adicionar o produto.  \n- Problemas de conexão durante a ação de adicionar ao carrinho.",
+      "example": false,
+      "id": "run-96aae678-55bf-4034-adb9-640603551767-0",
+      "invalid_tool_calls": [],
+      "response_metadata": {
+        "finish_reason": "stop",
+        "logprobs": null,
+        "model_name": "gpt-4.1-mini-2025-04-14",
+        "system_fingerprint": "fp_b51326e9dc",
+        "token_usage": {
+          "completion_tokens": 204,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0
+          },
+          "prompt_tokens": 920,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "total_tokens": 1124
+        }
+      },
+      "tool_calls": [],
+      "type": "ai",
+      "usage_metadata": {
+        "input_token_details": {
+          "audio": 0,
+          "cache_read": 0
+        },
+        "input_tokens": 920,
+        "output_token_details": {
+          "audio": 0,
+          "reasoning": 0
+        },
+        "output_tokens": 204,
+        "total_tokens": 1124
+      }
+    }
+  },
+  "metadata": {
+    "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+    "LANGSMITH_PROJECT": "mba-fc",
+    "LANGSMITH_TRACING": "true",
+    "ls_run_depth": 0
+  },
+  "langsmith": {
+    "organization": {
+      "name": "Personal",
+      "id": "541d4843-15b3-44fb-91a8-2c4210ee4d0b"
+    },
+    "workspace": {
+      "name": "Workspace 1",
+      "id": "b24bdd88-0126-4580-8f00-4e081631a24f"
+    },
+    "tracing_project": {
+      "id": "841ed629-ab5e-4d33-94bb-aa57130c0fe9",
+      "name": "mba-fc"
+    }
+  }
+}

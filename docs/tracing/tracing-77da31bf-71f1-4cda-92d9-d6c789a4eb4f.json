@@ -1,0 +1,72 @@
+{
+  "inputs": {
+    "bug_report": "Carrinho permite finalizar compra mesmo com produto fora de estoque.\n\nFluxo do bug:\n1. Produto tem 2 unidades em estoque\n2. Cliente A adiciona 2 unidades ao carrinho\n3. Estoque fica zerado\n4. Cliente B ainda consegue adicionar ao carrinho\n5. Cliente B finaliza compra\n6. Sistema gera pedido mas não tem estoque para enviar"
+  },
+  "outputs": {
+    "output": {
+      "additional_kwargs": {
+        "refusal": null
+      },
+      "content": "## Resumo do Problema\n\nO sistema permite que clientes finalizem compras de produtos que já estão fora de estoque, gerando pedidos que não podem ser atendidos.\n\n## User Story\n\nComo cliente da loja,\nQuero que o sistema impeça a finalização da compra de produtos sem estoque disponível,\nPara evitar pedidos que não podem ser entregues.\n\n## Critérios de Aceitação\n\n- O sistema deve atualizar o estoque em tempo real ao adicionar produtos ao carrinho.\n- Clientes não devem conseguir adicionar ao carrinho quantidades superiores ao estoque disponível.\n- A finalização da compra deve ser bloqueada se algum produto estiver sem estoque suficiente.\n- Mensagens claras devem informar o cliente sobre a indisponibilidade do produto.\n- O sistema deve garantir a consistência do estoque mesmo com múltiplos clientes simultâneos.\n\n## Edge Cases\n\n- Clientes com produtos no carrinho que ficam sem estoque antes da finalização.\n- Atualizações de estoque simultâneas por múltiplos clientes.\n- Cancelamento ou alteração de pedidos que liberem estoque.",
+      "example": false,
+      "id": "run-378a7718-1055-4805-a13c-87b297a6e7e6-0",
+      "invalid_tool_calls": [],
+      "response_metadata": {
+        "finish_reason": "stop",
+        "logprobs": null,
+        "model_name": "gpt-4.1-mini-2025-04-14",
+        "system_fingerprint": "fp_b51326e9dc",
+        "token_usage": {
+          "completion_tokens": 211,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0
+          },
+          "prompt_tokens": 983,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "total_tokens": 1194
+        }
+      },
+      "tool_calls": [],
+      "type": "ai",
+      "usage_metadata": {
+        "input_token_details": {
+          "audio": 0,
+          "cache_read": 0
+        },
+        "input_tokens": 983,
+        "output_token_details": {
+          "audio": 0,
+          "reasoning": 0
+        },
+        "output_tokens": 211,
+        "total_tokens": 1194
+      }
+    }
+  },
+  "metadata": {
+    "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+    "LANGSMITH_PROJECT": "mba-fc",
+    "LANGSMITH_TRACING": "true",
+    "ls_run_depth": 0
+  },
+  "langsmith": {
+    "organization": {
+      "name": "Personal",
+      "id": "541d4843-15b3-44fb-91a8-2c4210ee4d0b"
+    },
+    "workspace": {
+      "name": "Workspace 1",
+      "id": "b24bdd88-0126-4580-8f00-4e081631a24f"
+    },
+    "tracing_project": {
+      "id": "841ed629-ab5e-4d33-94bb-aa57130c0fe9",
+      "name": "mba-fc"
+    }
+  }
+}

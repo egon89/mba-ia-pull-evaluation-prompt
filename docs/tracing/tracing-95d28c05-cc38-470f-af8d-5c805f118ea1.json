@@ -1,0 +1,72 @@
+{
+  "inputs": {
+    "bug_report": "Sistema de relatórios gerenciais com problemas severos de performance e dados incorretos.\n\nCONTEXTO:\nAplicação SaaS B2B com 500+ empresas clientes, cada uma com 50-5000 usuários.\n\nPROBLEMAS:\n\n1. PERFORMANCE - Query N+1 no dashboard executivo:\n   - Endpoint: GET /api/reports/executive-dashboard\n   - Para cada empresa, faz query separada para buscar métricas\n   - 1 cliente com 100 departamentos = 101 queries\n   - Tempo de resposta: 45 segundos (SLA: 3s)\n   - Database CPU: 95% em horário de pico\n\n   Stack trace:\n   ```\n   SELECT * FROM metrics WHERE company_id = ?  (executado 100x)\n   SELECT * FROM users WHERE company_id = ?     (executado 100x)\n   SELECT * FROM licenses WHERE company_id = ?  (executado 100x)\n   ```\n\n2. LÓGICA DE NEGÓCIO - Cálculo de MRR (Monthly Recurring Revenue) inconsistente:\n   - Dashboard mostra: R$ 150.000 MRR\n   - Relatório financeiro: R$ 145.000 MRR\n   - Planilha contábil: R$ 147.500 MRR\n\n   Causas identificadas:\n   - Dashboard: considera cancelamentos do mês anterior\n   - Relatório: só considera assinaturas ativas\n   - Contábil: considera pró-rata de upgrades/downgrades\n   - Nenhuma fonte está 100% correta\n\n3. CACHE - Cache Redis desatualizado causa dados old:\n   - TTL do cache: 24 horas\n   - Cliente faz upgrade de plano\n   - Dashboard ainda mostra plano antigo por até 24h\n   - Invalidação manual não funciona corretamente\n\n4. CONCORRÊNCIA - Exportação de CSV trava servidor:\n   - Exportar relatório anual (365 dias, 50k linhas)\n   - Process fica em 100% CPU por 5 minutos\n   - Outras requisições ficam lentas\n   - Memória cresce até 4GB (limite: 2GB) → OOM Kill\n\nIMPACTO BUSINESS:\n- 15 clientes enterprise ameaçando cancelar contrato\n- CEO não confia nos números para apresentar ao board\n- Time de CS gastando 40h/semana explicando discrepâncias\n- Impossível fazer forecasting confiável"
+  },
+  "outputs": {
+    "output": {
+      "additional_kwargs": {
+        "refusal": null
+      },
+      "content": "## Resumo do Problema\n\nO sistema de relatórios gerenciais apresenta problemas graves de performance, dados inconsistentes e cache desatualizado, impactando a confiabilidade das informações e a experiência dos clientes.\n\n## User Story\n\nComo usuário corporativo que utiliza o dashboard executivo e relatórios financeiros,  \nQuero que os relatórios sejam gerados rapidamente com dados corretos e atualizados,  \nPara tomar decisões confiáveis e evitar perda de clientes devido a informações inconsistentes e lentidão.\n\n## Critérios de Aceitação\n\n- O endpoint GET /api/reports/executive-dashboard deve responder em até 3 segundos, eliminando queries N+1.\n- O cálculo do MRR deve ser unificado e consistente entre dashboard, relatórios financeiros e contabilidade, refletindo corretamente assinaturas, cancelamentos e pró-rata.\n- O cache Redis deve ser atualizado automaticamente após alterações relevantes, garantindo que dados exibidos estejam atualizados em tempo real ou com latência mínima.\n- A exportação de relatórios em CSV deve ser otimizada para não travar o servidor, mantendo uso de CPU e memória dentro dos limites aceitáveis.\n- O sistema deve suportar a carga de clientes enterprise sem degradação perceptível na performance.\n\n## Edge Cases\n\n- Empresas com grande número de departamentos e usuários simultâneos acessando relatórios.\n- Alterações frequentes de planos e assinaturas durante o período de cache.\n- Exportação de relatórios com volumes extremos de dados (ex: mais de 50k linhas).\n- Cenários de pico de uso simultâneo por múltiplos clientes enterprise.",
+      "example": false,
+      "id": "run-8c5b4724-848b-46f2-8772-f12f720760d4-0",
+      "invalid_tool_calls": [],
+      "response_metadata": {
+        "finish_reason": "stop",
+        "logprobs": null,
+        "model_name": "gpt-4.1-mini-2025-04-14",
+        "system_fingerprint": "fp_b51326e9dc",
+        "token_usage": {
+          "completion_tokens": 323,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0
+          },
+          "prompt_tokens": 1416,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "total_tokens": 1739
+        }
+      },
+      "tool_calls": [],
+      "type": "ai",
+      "usage_metadata": {
+        "input_token_details": {
+          "audio": 0,
+          "cache_read": 0
+        },
+        "input_tokens": 1416,
+        "output_token_details": {
+          "audio": 0,
+          "reasoning": 0
+        },
+        "output_tokens": 323,
+        "total_tokens": 1739
+      }
+    }
+  },
+  "metadata": {
+    "LANGSMITH_ENDPOINT": "https://api.smith.langchain.com",
+    "LANGSMITH_PROJECT": "mba-fc",
+    "LANGSMITH_TRACING": "true",
+    "ls_run_depth": 0
+  },
+  "langsmith": {
+    "organization": {
+      "name": "Personal",
+      "id": "541d4843-15b3-44fb-91a8-2c4210ee4d0b"
+    },
+    "workspace": {
+      "name": "Workspace 1",
+      "id": "b24bdd88-0126-4580-8f00-4e081631a24f"
+    },
+    "tracing_project": {
+      "id": "841ed629-ab5e-4d33-94bb-aa57130c0fe9",
+      "name": "mba-fc"
+    }
+  }
+}
