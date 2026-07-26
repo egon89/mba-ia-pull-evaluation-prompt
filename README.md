@@ -1,31 +1,8 @@
 # Pull, Otimização e Avaliação de Prompts com LangChain e LangSmith
 
-## Work in Progress
-```sh
-docker compose up -d --build
+## Técnicas Aplicadas (Fase 2)
 
-docker compose exec python_app bash
-
-# dentro do container:
-python src/pull_prompts.py
-```
-
-- [x] Fase 1: Pull do prompt inicial do LangSmith
-  - [ ] verificar permissões do arquivo criado no /prompts via execução do container
-- [x] Fase 2: Refatoração do prompt com técnicas avançadas de Prompt Engineering
-- [x] Fase 3: Push do prompt otimizado para o LangSmith
-  - executar script `src/push_prompts.py` e verificar no dashboard do LangSmith se o prompt foi publicado
-  - [prompt-publicado](https://smith.langchain.com/prompts/bug_to_user_story_v2/3be67315?organizationId=b24bdd88-0126-4580-8f00-4e081631a24f)
-- [x] Fase 4: Avaliação do prompt otimizado
-  - executar script `src/evaluate.py` e verificar se todas as métricas estão >= 0.8
-- [ ] Verificar testes e documentação
-
----
-
-# Técnicas Aplicadas (Fase 2)
-
-## Objetivo
-
+### Objetivo
 O objetivo desta fase foi otimizar o prompt responsável por converter relatos de bugs em User Stories, buscando melhorar seu desempenho nas métricas de avaliação do LangSmith:
 
 - Helpfulness
@@ -34,13 +11,12 @@ O objetivo desta fase foi otimizar o prompt responsável por converter relatos d
 - Clarity
 - Precision
 
----
 
-# Técnicas Utilizadas
+### Técnicas Utilizadas
 
-## 1. Few-shot Learning
+#### 1. Few-shot Learning
 
-### Justificativa
+##### Justificativa
 
 O prompt original não apresentava exemplos de entrada e saída.
 
@@ -51,7 +27,7 @@ Foram adicionados exemplos completos para ensinar ao modelo:
 - Escrita de critérios de aceitação
 - Identificação de edge cases
 
-### Aplicação Prática
+##### Aplicação Prática
 
 Foram criados três exemplos representando diferentes cenários de negócio:
 
@@ -59,7 +35,7 @@ Foram criados três exemplos representando diferentes cenários de negócio:
 - Renovação de autenticação utilizando Refresh Token
 - Exportação de relatórios PDF
 
-### Exemplo Multi-Tenant
+##### Exemplo Multi-Tenant
 
 Entrada:
 
@@ -77,21 +53,23 @@ Quero visualizar apenas os dados pertencentes ao meu tenant,
 Para garantir a confidencialidade e integridade das informações da minha organização.
 ```
 
-### Métricas Impactadas
+##### Métricas Impactadas
 
 - Correctness
 - Precision
 - F1-Score
 
-## 2. Role Prompting
+---
 
-### Justificativa
+#### 2. Role Prompting
+
+##### Justificativa
 
 O prompt original utilizava apenas a persona "Você é um assistente", o que deixava a resposta muito aberta.
 
 Foi definida uma persona especializada em Product Management e metodologias ágeis para direcionar o modelo a produzir User Stories alinhadas às boas práticas de Scrum.
 
-### Aplicação Prática
+##### Aplicação Prática
 
 Foi utilizada a seguinte persona:
 
@@ -106,27 +84,29 @@ Você é um Product Manager Sênior especializado em:
 - Escrita de User Stories
 ```
 
-### Benefícios Esperados
+##### Benefícios Esperados
 
 - Melhor contextualização do problema
 - User Stories mais alinhadas com práticas ágeis
 - Critérios de aceitação mais relevantes
 - Menor probabilidade de respostas genéricas
 
-### Métricas Impactadas
+##### Métricas Impactadas
 
 - Helpfulness
 - Correctness
 
-## 3. Skeleton of Thought
+---
 
-### Justificativa
+#### 3. Skeleton of Thought
+
+##### Justificativa
 
 Para reduzir a variabilidade das respostas, foi definido um esqueleto obrigatório.
 
 Essa estrutura garante que todas as respostas possuam as mesmas seções e facilita tanto a leitura quanto a avaliação automática.
 
-### Aplicação Prática
+##### Aplicação Prática
 
 ```markdown
 ## Resumo do Problema
@@ -146,20 +126,20 @@ Para...
 - ...
 ```
 
-### Benefícios Esperados
+##### Benefícios Esperados
 
 - Melhor organização da resposta
 - Facilidade de leitura
 - Saídas mais previsíveis
 - Menor risco de omissão de informações importantes
 
-### Métricas Impactadas
+##### Métricas Impactadas
 
 - Clarity
 - Precision
 - F1-Score
 
-# Métricas
+### Métricas
 
 | Métrica | Objetivo | Exemplo |
 |----------|----------|----------|
@@ -169,7 +149,7 @@ Para...
 | **Clarity** | Avalia organização e facilidade de leitura. | Resposta estruturada com seções bem definidas. |
 | **Precision** | Mede o foco da resposta no problema informado. | Evita incluir funcionalidades ou informações não relacionadas ao bug. |
 
-## Relação entre Técnicas e Métricas
+### Relação entre Técnicas e Métricas
 
 | Técnica | Helpfulness | Correctness | Clarity | Precision | F1-Score |
 |----------|:----------:|:----------:|:--------:|:---------:|:--------:|
@@ -177,7 +157,7 @@ Para...
 | Role Prompting | ✓ | ✓ | | | |
 | Skeleton of Thought | | | ✓ | ✓ | ✓ |
 
-## Resultado Esperado
+### Resultado Esperado
 
 A combinação das técnicas foi escolhida para melhorar simultaneamente as cinco métricas avaliadas pelo LangSmith.
 
@@ -189,16 +169,17 @@ A combinação das técnicas foi escolhida para melhorar simultaneamente as cinc
 
 Espera-se, com essa combinação, atingir pontuação **igual ou superior a 0,8** em todas as métricas de avaliação (Helpfulness, Correctness, F1-Score, Clarity e Precision).
 
-# Resultados Finais
-## LangSmith
-### Dashboard
+## Resultados Finais
+### LangSmith
+#### Dashboard
 ![evaluate-1](/docs/langsmith-dashboard.png)
-[Link para o Dashboard](https://smith.langchain.com/o/b24bdd88-0126-4580-8f00-4e081631a24f/projects/p/841ed629-ab5e-4d33-94bb-aa57130c0fe9?timeModel=%7B%7D&custom_run_filter_view_id=6e33c201-6332-4c1b-a23f-f240ea3d9fc4&runview=traces&searchModel=%7B%22filter%22%3A%22eq%28is_root%2C+true%29%22%2C%22traceFilter%22%3A%22%22%2C%22treeFilter%22%3A%22%22%7D) (não foi encontrada a opção para tornar o link público)
 
-### Dataset
+[Link para o Dashboard](https://smith.langchain.com/o/b24bdd88-0126-4580-8f00-4e081631a24f/projects/p/841ed629-ab5e-4d33-94bb-aa57130c0fe9?timeModel=%7B%7D&custom_run_filter_view_id=6e33c201-6332-4c1b-a23f-f240ea3d9fc4&runview=traces&searchModel=%7B%22filter%22%3A%22eq%28is_root%2C+true%29%22%2C%22traceFilter%22%3A%22%22%2C%22treeFilter%22%3A%22%22%7D) (não foi encontrada a opção para tornar o dashboard público)
+
+#### Dataset
 ![evaluate-1](/docs/langsmith-dataset.png)
 
-## Terminal output
+### Terminal output
 ```
 ==================================================
 AVALIAÇÃO DE PROMPTS OTIMIZADOS
@@ -270,17 +251,12 @@ Aprovados: 1
 Reprovados: 0
 
 ✅ Todos os prompts atingiram todas as métricas >= 0.8!
-
-✓ Confira os resultados em:
-  https://smith.langchain.com/projects/mba-fc
 ```
 
 ![evaluate-1](/docs/evaluate-1.png)
 ![evaluate-2](/docs/evaluate-2.png)
 
-
-
-## Evolução do Prompt (v1 → v2)
+### Evolução do Prompt (v1 → v2)
 
 A primeira versão do prompt possuía apenas uma instrução genérica para transformar um relato de bug em uma User Story.
 
@@ -311,7 +287,7 @@ A versão **v2** foi reformulada utilizando técnicas de Prompt Engineering para
 | Consistência das respostas | Baixa | Alta |
 
 
-### Tabela comparativa
+#### Tabela comparativa
 | Métrica | v1 (prompt ruim) | v2 (otimizado) | Aprovado? |
 |---------|-----------------|----------------|-----------|
 | Helpfulness | 0.45 | 0.90 | ✅ |
@@ -328,3 +304,25 @@ A versão **v2** foi reformulada utilizando técnicas de Prompt Engineering para
 - [Tracing *relatórios gerenciais*](docs/tracing/tracing-95d28c05-cc38-470f-af8d-5c805f118ea1.json)
 - [Tracing *compra de produto fora de estoque*](docs/tracing/tracing-77da31bf-71f1-4cda-92d9-d6c789a4eb4f.json)
 - [Tracing *sistema de checkout com múltiplas falhas críticas*](docs/tracing/tracing-8a22e1d9-332d-481b-9425-0c0eb8ec0784.json)
+
+## Como Executar
+
+Realize uma cópia do arquivo `.env.example` para `.env` (`cp .env.example .env`) e configure as variáveis de ambiente necessárias. Foi utilizado o modelo `gpt-4.1-mini` da OpenAI para avaliação, mas você pode alterar para outro modelo compatível com LangSmith.
+
+```sh
+# Inicie o container:
+docker compose up -d --build
+
+# Acesse o container:
+docker compose exec python_app bash
+
+# Execute os scripts dentro do container, por exemplo:
+python src/pull_prompts.py
+```
+
+### Fases
+- Fase 1 (*Pull do prompt inicial do LangSmith*): `python src/pull_prompts.py`
+- Fase 2 (*Refatoração do prompt com técnicas avançadas de Prompt Engineering*): editar o arquivo `prompts/bug_to_user_story_v2.yml`
+- Fase 3 (*Push do prompt otimizado para o LangSmith*): `python src/push_prompts.py`
+- Fase 4 (*Avaliação do prompt otimizado*): `python src/evaluate.py`
+- Fase 5 (*Verificação de testes*): `pytest -v tests/test_prompts.py`
